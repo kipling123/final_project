@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SDN Dashboard - Live Topology{% endblock %}
+
+{% block content %}
+<div id="topology-container" class="topology-view"></div>
+
+<div class="stats-overlay">
+    <div class="stat-card">
+        <div class="label">System Load</div>
+        <div class="value">24.5%</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Traffic Out</div>
+        <div class="value">128 MB/s</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Active Links</div>
+        <div class="value" style="color: var(--online)">12 Healthy</div>
+    </div>
+</div>
+
+<div class="control-panel glass-border"
+    style="position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 16px; backdrop-filter: blur(10px);">
+    <h3 style="margin-bottom: 10px; font-size: 0.9rem;">Topology Controls</h3>
+    <div style="display: flex; gap: 10px;">
+        <button id="fit-btn"
+            style="background: var(--accent); border: none; padding: 8px 15px; color: white; border-radius: 8px; cursor: pointer;">🔍
+            Fit</button>
+        <button id="refresh-btn"
+            style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 15px; color: white; border-radius: 8px; cursor: pointer;">🔄
+            Refresh</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{% static 'js/topology.js' %}"></script>
+{% endblock %}
