@@ -1,3 +1,4 @@
+// static/js/topology.js
 document.addEventListener('DOMContentLoaded', function() {
     const cy = cytoscape({
         container: document.getElementById('topology-container'),
@@ -5,42 +6,68 @@ document.addEventListener('DOMContentLoaded', function() {
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#3b82f6',
+                    'background-color': '#32d1ff', /* --accent */
                     'label': 'data(name)',
-                    'color': '#f8fafc',
-                    'font-size': '12px',
+                    'color': '#d8d9da', /* --text-primary */
+                    'font-family': 'Inter, sans-serif',
+                    'font-size': '10px',
                     'text-valign': 'bottom',
-                    'text-margin-y': '5px',
-                    'width': '40px',
-                    'height': '40px',
+                    'text-margin-y': '8px',
+                    'width': '34px',
+                    'height': '34px',
+                    'border-width': '2px',
+                    'border-color': '#111217',
                     'overlay-padding': '6px',
                     'z-index': '10'
                 }
             },
             {
-                selector: 'node[node_type="switch"]',
+                selector: '.switch',
                 style: {
-                    'background-color': '#8b5cf6',
-                    'shape': 'round-rectangle'
+                    'background-color': '#ff9d2a', /* --accent-orange */
+                    'shape': 'rectangle',
+                    'width': '46px',
+                    'height': '32px'
+                }
+            },
+            {
+                selector: '.container',
+                style: {
+                    'background-color': '#73bf69',
+                    'shape': 'ellipse'
                 }
             },
             {
                 selector: 'edge',
                 style: {
                     'width': 2,
-                    'line-color': '#475569',
-                    'target-arrow-color': '#475569',
+                    'line-color': 'rgba(115, 191, 105, 0.5)', /* --online transparentish */
+                    'target-arrow-color': 'rgba(115, 191, 105, 0.5)',
                     'target-arrow-shape': 'triangle',
-                    'curve-style': 'bezier'
+                    'curve-style': 'bezier',
+                    'label': 'data(bandwidth)',
+                    'font-size': '8px',
+                    'color': '#909192',
+                    'text-rotation': 'autorotate',
+                    'text-margin-y': '-10px'
                 }
             },
             {
                 selector: ':selected',
                 style: {
-                    'background-color': '#f59e0b',
-                    'line-color': '#f59e0b',
-                    'target-arrow-color': '#f59e0b',
-                    'source-arrow-color': '#f59e0b'
+                    'background-color': '#ffffff',
+                    'line-color': '#ffffff',
+                    'target-arrow-color': '#ffffff',
+                    'source-arrow-color': '#ffffff',
+                    'border-color': '#32d1ff',
+                    'border-width': '3px'
+                }
+            },
+            {
+                selector: '.edge-active',
+                style: {
+                    'line-style': 'dashed',
+                    'line-dash-pattern': [6, 3]
                 }
             }
         ],
@@ -51,6 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function loadTopology() {
+        console.log('Fetching topology data...');
         fetch('/api/topology/')
             .then(res => res.json())
             .then(data => {
@@ -63,7 +91,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             id: node.id.toString(),
                             name: node.name,
                             node_type: node.node_type
-                        }
+                        },
+                        // Map node_type to classes for styling
+                        classes: node.node_type === 'switch' ? 'switch' : 'container'
                     });
                 });
 
@@ -73,14 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         data: {
                             id: `l${link.id}`,
                             source: link.source_id.toString(),
-                            target: link.target_id.toString()
-                        }
+                            target: link.target_id.toString(),
+                            bandwidth: link.bandwidth || 'N/A' // Use bandwidth if available
+                        },
+                        classes: (link.bandwidth && parseFloat(link.bandwidth) > 0) ? 'edge-active' : ''
                     });
                 });
 
                 cy.elements().remove();
                 cy.add(elements);
-                cy.layout({ name: 'cose' }).run();
+                cy.layout({ name: 'cose', animate: true }).run();
             })
             .catch(err => console.error('Error loading topology:', err));
     }
@@ -89,18 +121,15 @@ document.addEventListener('DOMContentLoaded', function() {
     loadTopology();
 
     // UI Buttons
-    document.getElementById('fit-btn').addEventListener('click', () => {
-        cy.fit();
-    });
+    const fitBtn = document.getElementById('fit-btn');
+    if (fitBtn) fitBtn.addEventListener('click', () => cy.fit());
 
-    document.getElementById('refresh-btn').addEventListener('click', () => {
-        loadTopology();
-    });
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) refreshBtn.addEventListener('click', () => loadTopology());
 
-    // Handle node selection for "Advanced Config"
+    // Handle node selection
     cy.on('tap', 'node', function(evt){
         const node = evt.target.data();
         console.log('Selected node:', node);
-        // Here we can trigger a modal or terminal view
     });
 });

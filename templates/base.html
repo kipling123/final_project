@@ -1,61 +1,70 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SDN Dash{% endblock %}</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- External Libs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {% block extra_head %}{% endblock %}
 </head>
+
 <body class="dark-theme">
     <div class="glass-container">
+        <!-- Sidebar: Grafana Narrow Monitored Style -->
         <aside class="sidebar">
             <div class="logo">
-                <span class="logo-icon">⚡</span>
-                <h1>SDN<span>Guard</span></h1>
+                <h1>FINAL PROJECT<span></span></h1>
             </div>
             <nav>
                 <a href="{% url 'networks:dashboard' %}" class="nav-item active">
-                    <span class="icon">📊</span> Dashboard
+                    <span class="label">Main Dashboard</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <span class="icon">🔗</span> Topology
+                    <span class="label">Network Topology</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <span class="icon">📁</span> Logs
+                    <span class="label">Explore Data</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <span class="icon">⚙️</span> Settings
-                </a>
+                <div style="flex: 1;"></div> <!-- Spacer -->
+
             </nav>
-            <div class="status-panel">
-                <div class="status-item">
-                    <span class="label">Controller</span>
-                    <span class="value online">Online</span>
-                </div>
-                <div class="status-item">
-                    <span class="label">Switches</span>
-                    <span class="value">4 Active</span>
-                </div>
-            </div>
         </aside>
 
+        <!-- Main Content Area -->
         <main class="content">
             <header class="top-bar">
-                <div class="search-bar">
-                    <input type="text" placeholder="Search nodes, IP, links...">
+                <div class="breadcrumb">
+                    <span>Admin Profile</span>
+                    <span>/</span>
+                    <span>Systems Monitoring</span>
+                    <span>/</span>
+                    <span class="current">SDN Cluster Status</span>
                 </div>
-                <div class="user-profile">
-                    <span class="notification">🔔</span>
-                    <div class="avatar"></div>
+                <div class="top-actions">
+                    <div class="refresh-indicator" style="font-size: 0.75rem; color: var(--online);">
+                        <span class="pulse"></span> Live Updates
+                    </div>
+                    <div class="time-picker">
+                        <span>Last 15 minutes</span>
+                    </div>
+                    <div class="user-profile">
+                        <div class="avatar"
+                            style="width: 28px; height: 28px; background: #333; border-radius: 50%; border: 1px solid var(--border-color);">
+                        </div>
+                    </div>
                 </div>
             </header>
-            
+
             <div class="view-container">
                 {% block content %}{% endblock %}
             </div>
@@ -63,4 +72,5 @@
     </div>
     {% block extra_scripts %}{% endblock %}
 </body>
+
 </html>

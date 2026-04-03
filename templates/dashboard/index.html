@@ -1,40 +1,253 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}SDN Dashboard - Live Topology{% endblock %}
+{% block title %}SDN Dashboard - Advanced Topology & Metrics{% endblock %}
 
 {% block content %}
-<div id="topology-container" class="topology-view"></div>
+<div class="dashboard-grid">
+    <!-- Component Status Panel: VM1 & VM2 Groups -->
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span>NETWORK STATUS</span>
+            <span style="font-size: 0.7rem; color: var(--online);">SYSTEM READY</span>
+        </div>
+        <div class="panel-content" style="display: flex; gap: 20px; padding: 15px;">
+            <!-- VM1 GROUP -->
+            <div style="flex: 1; border-right: 1px solid var(--border-color); padding-right: 20px;">
+                <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 10px; font-weight: 700;">
+                    VM1: MANAGEMENT STACK</div>
+                <div class="status-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="status-card">
+                        <div class="label">WEB APP</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">GRAFANA</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">PROMETHEUS</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">EXPORTER</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">TOPOLOGY</div>
+                        <div class="indicator online"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- VM2 GROUP -->
+            <div style="flex: 1;">
+                <div style="font-size: 0.65rem; color: var(--text-secondary); margin-bottom: 10px; font-weight: 700;">
+                    VM2: NETWORK FABRIC</div>
+                <div class="status-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="status-card">
+                        <div class="label">OVSWITCH</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">CONTAINERNET</div>
+                        <div class="indicator online"></div>
+                    </div>
+                    <div class="status-card">
+                        <div class="label">DEVICES</div>
+                        <div class="indicator online"></div>
+                    </div>
+                </div>
+                <!-- Inter-VM Connectivity -->
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <div
+                        style="flex: 1; background: rgba(255,255,255,0.03); padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <div style="font-size: 0.6rem; color: #999;">HOST-ONLY LINK</div>
+                        <div style="font-size: 0.75rem; color: var(--online); font-weight: 600;">CONNECTED</div>
+                    </div>
+                    <div
+                        style="flex: 1; background: rgba(255,255,255,0.03); padding: 8px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <div style="font-size: 0.6rem; color: #999;">OPENFLOW CHANNEL</div>
+                        <div style="font-size: 0.75rem; color: var(--online); font-weight: 600;">ACTIVE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div class="stats-overlay">
-    <div class="stat-card">
-        <div class="label">System Load</div>
-        <div class="value">24.5%</div>
-    </div>
-    <div class="stat-card">
-        <div class="label">Traffic Out</div>
-        <div class="value">128 MB/s</div>
-    </div>
-    <div class="stat-card">
-        <div class="label">Active Links</div>
-        <div class="value" style="color: var(--online)">12 Healthy</div>
-    </div>
-</div>
+    <!-- Live Topology Panel -->
+    <div class="panel" style="grid-column: span 8; grid-row: span 4; min-height: 500px;">
+        <div class="panel-header">
+            <span>NETWORK TOPOLOGY MAPPING</span>
+            <span>ENGINE: CYTOSCAPE</span>
+        </div>
+        <div class="panel-content" style="padding: 0;">
+            <div id="topology-container" class="topology-view"></div>
 
-<div class="control-panel glass-border"
-    style="position: absolute; bottom: 20px; left: 20px; background: rgba(0,0,0,0.5); padding: 15px; border-radius: 16px; backdrop-filter: blur(10px);">
-    <h3 style="margin-bottom: 10px; font-size: 0.9rem;">Topology Controls</h3>
-    <div style="display: flex; gap: 10px;">
-        <button id="fit-btn"
-            style="background: var(--accent); border: none; padding: 8px 15px; color: white; border-radius: 8px; cursor: pointer;">🔍
-            Fit</button>
-        <button id="refresh-btn"
-            style="background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 8px 15px; color: white; border-radius: 8px; cursor: pointer;">🔄
-            Refresh</button>
+            <div class="control-panel"
+                style="position: absolute; bottom: 15px; left: 15px; z-index: 100; display: flex; gap: 8px;">
+                <button id="fit-btn" title="Center View">Fit View</button>
+                <button id="refresh-btn" title="Reload Topology">Sync Data</button>
+            </div>
+
+            <!-- Dashboard Mini Legend Overlay -->
+            <div
+                style="position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); border: 1px solid var(--border-color); padding: 5px 12px; border-radius: 2px; font-size: 0.65rem; color: #999; pointer-events: none;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="width: 10px; height: 3px; background: #ff9d2a; border-radius: 0;"></span> SWITCH
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="width: 8px; height: 8px; background: #32d1ff; border-radius: 50%;"></span> NODE
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="width: 12px; height: 1px; background: #73bf69;"></span> ACTIVE LINK
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Statistics: Visualizing Data In/Out -->
+    <div class="panel" style="grid-column: span 4; grid-row: span 2; min-height: 220px;">
+        <div class="panel-header">THROUGHPUT: VM1 <-> VM2</div>
+        <div class="panel-content" style="padding: 10px; display: flex; flex-direction: column;">
+            <div style="flex: 1; min-height: 100px;">
+                <canvas id="trafficInChart"></canvas>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <div style="font-size: 0.7rem; color: var(--text-secondary);">BW USAGE</div>
+                    <div id="traffic-in-val" style="font-size: 1.8rem; font-weight: 800; color: var(--accent);">45.2
+                        Mbps</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.7rem; color: var(--text-secondary);">VM2 LOAD</div>
+                    <div style="font-size: 1rem; font-weight: 600; color: #fff;">34%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel" style="grid-column: span 4; grid-row: span 2; min-height: 220px;">
+        <div class="panel-header">CONTROLLER MESSAGE RATE</div>
+        <div class="panel-content" style="padding: 10px; display: flex; flex-direction: column;">
+            <div style="flex: 1; min-height: 100px;">
+                <canvas id="trafficOutChart"></canvas>
+            </div>
+            <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <div>
+                    <div style="font-size: 0.7rem; color: var(--text-secondary);">CURRENT PKT/S</div>
+                    <div id="traffic-out-val" style="font-size: 1.8rem; font-weight: 800; color: var(--online);">1,280
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="font-size: 0.7rem; color: var(--text-secondary);">SESSION</div>
+                    <div style="font-size: 1rem; font-weight: 600; color: #fff;">ACTIVE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interface Link Status -->
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span>VM1 & VM2 INTERFACE METRICS (PROMETHEUS)</span>
+            <a href="#"
+                style="color: var(--accent-orange); text-decoration: none; font-size: 0.7rem; font-weight: 600;">OPEN
+                EXPORTER ↗</a>
+        </div>
+        <div class="panel-content">
+            <table
+                style="width: 100%; font-size: 0.8rem; color: var(--text-primary); border-collapse: collapse; text-align: left;">
+                <thead>
+                    <tr style="color: var(--text-secondary); border-bottom: 2px solid var(--border-color);">
+                        <th style="padding: 12px 8px;">INTERFACE</th>
+                        <th>HOST</th>
+                        <th>DESTINATION ENTITY</th>
+                        <th>TX RATE</th>
+                        <th>RX RATE</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="interface-table-body">
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 12px 8px; font-family: 'JetBrains Mono'; color: var(--accent);">eth0</td>
+                        <td>VM1</td>
+                        <td>BRIDGE-OVS-VM2</td>
+                        <td>45.2 Mb/s</td>
+                        <td>43.1 Mb/s</td>
+                        <td><span style="color: var(--online);">Online</span></td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 12px 8px; font-family: 'JetBrains Mono'; color: var(--accent);">ovs-br0</td>
+                        <td>VM2</td>
+                        <td>CONTAINERNET-CORE</td>
+                        <td>12.8 Mb/s</td>
+                        <td>12.1 Mb/s</td>
+                        <td><span style="color: var(--online);">Online</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script src="{% static 'js/topology.js' %}"></script>
+<script>
+    // Traffic Charts Initialization
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { display: false },
+            y: { display: false, min: 0, max: 100 }
+        },
+        elements: {
+            line: { tension: 0.4, borderWidth: 2 },
+            point: { radius: 0 }
+        }
+    };
+
+    function createChart(id, color) {
+        const ctx = document.getElementById(id).getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 100);
+        gradient.addColorStop(0, color.replace('1)', '0.3)'));
+        gradient.addColorStop(1, color.replace('1)', '0)'));
+
+        return new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array(20).fill(''),
+                datasets: [{
+                    borderColor: color,
+                    backgroundColor: gradient,
+                    fill: true,
+                    data: Array(20).fill(0).map(() => Math.floor(Math.random() * 40) + 20)
+                }]
+            },
+            options: commonOptions
+        });
+    }
+
+    const inChart = createChart('trafficInChart', 'rgba(50, 209, 255, 1)');
+    const outChart = createChart('trafficOutChart', 'rgba(115, 191, 105, 1)');
+
+    // Simulated Real-time update
+    setInterval(() => {
+        [inChart, outChart].forEach(chart => {
+            chart.data.datasets[0].data.shift();
+            chart.data.datasets[0].data.push(Math.floor(Math.random() * 40) + 20);
+            chart.update('none');
+        });
+
+        // Update random values in text
+        const valIn = (Math.random() * 10 + 40).toFixed(1);
+        const valOut = (Math.random() * 5 + 10).toFixed(1);
+        document.getElementById('traffic-in-val').innerText = `${valIn} Mbps`;
+        document.getElementById('traffic-out-val').innerText = `${valOut} Mbps`;
+    }, 2000);
+</script>
 {% endblock %}
