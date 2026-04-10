@@ -1,0 +1,5 @@
+**FINAL PROJECT SDN**
+
+Topologi ini menggambarkan integrasi antara Software-Defined Networking (SDN) dan cluster Hadoop dalam lingkungan virtual yang terdiri dari dua Virtual Machine (VM). VM 1 berperan sebagai Management Node yang menjalankan SDN Controller (seperti OpenDaylight) untuk mengelola jaringan secara terpusat melalui protokol OpenFlow. Sementara itu, VM 2 berfungsi sebagai Infrastructure Node yang mengimplementasikan topologi jaringan spine-leaf menggunakan Open vSwitch (OVS). Topologi ini terdiri dari dua spine switch dan dua leaf switch, di mana setiap leaf terhubung ke semua spine untuk menyediakan redundansi, skalabilitas, dan latensi rendah.
+
+Pada VM 2 juga dijalankan cluster Hadoop berbasis Docker, yang terdiri dari satu NameNode sebagai pengelola metadata HDFS dan dua DataNode sebagai penyimpan serta pemroses data. Integrasi SDN dengan Hadoop memungkinkan komunikasi antar node menjadi lebih efisien dan terkontrol, sehingga mendukung pemrosesan big data dengan performa jaringan yang optimal. Penggunaan virtualisasi dan containerisasi memberikan kemudahan dalam proses deployment, pengelolaan, serta pengembangan sistem.
