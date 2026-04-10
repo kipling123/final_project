@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Security Ops - Threat Intelligence{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Security Status Wall -->
+    <div class="panel" style="grid-column: span 4; height: 320px;">
+        <div class="panel-header">
+            <span><i class="ph ph-shield-check"></i> SHIELD STATUS</span>
+        </div>
+        <div class="panel-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+            <div style="position: relative;">
+                <div style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--online); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(16, 185, 129, 0.2);">
+                    <i class="ph ph-shield-check" style="font-size: 3.5rem; color: var(--online);"></i>
+                </div>
+                <div class="pulse" style="position: absolute; top: 0; right: 0; width: 24px; height: 24px;"></div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 1.2rem; font-weight: 700;">PERIMETER SECURE</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">LAST SCAN: 2 MIN AGO</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Threats -->
+    <div class="panel" style="grid-column: span 8; height: 320px;">
+        <div class="panel-header">
+            <span><i class="ph ph-warning-octagon"></i> LIVE THREAT DETECTION</span>
+            <span style="background: var(--offline); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.65rem;">3 INCIDENTS</span>
+        </div>
+        <div class="panel-content" style="overflow-y: auto;">
+            <div class="threat-item" style="display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border-color); background: rgba(239, 68, 68, 0.05);">
+                <i class="ph ph-warning-diamond" style="color: var(--offline); font-size: 1.5rem;"></i>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 700; color: white;">Port Scan Detected</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">14:22:10</span>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Source IP: 192.168.44.128 targeting core-switch-01.</p>
+                </div>
+                <button class="status-pill offline" style="border: none; cursor: pointer;">ISOLATE</button>
+            </div>
+            <div class="threat-item" style="display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid var(--border-color);">
+                <i class="ph ph-info" style="color: var(--accent); font-size: 1.5rem;"></i>
+                <div style="flex: 1;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="font-weight: 700; color: white;">Unusual Traffic Spike</span>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">13:05:45</span>
+                    </div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px;">Interface eth2 on VM-App-Server exceeded threshold.</p>
+                </div>
+                <button class="status-pill online" style="border: none; cursor: pointer; color: var(--accent); background: rgba(0, 242, 255, 0.1);">IGNORE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Access Control Table -->
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span><i class="ph ph-lock-key"></i> NETWORK ACCESS CONTROL (NAC) LIST</span>
+        </div>
+        <div class="panel-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>RULE NAME</th>
+                        <th>SOURCE</th>
+                        <th>DESTINATION</th>
+                        <th>ACTION</th>
+                        <th>LOGS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ALLOW_GRAFANA_HTTP</td>
+                        <td>ANY</td>
+                        <td>MANAGEMENT_IP:3000</td>
+                        <td><span class="status-pill online">ALLOW</span></td>
+                        <td><i class="ph ph-eye" style="cursor: pointer;"></i></td>
+                    </tr>
+                    <tr>
+                        <td>BLOCK_DEV_TO_PROD</td>
+                        <td>DEV_SUBNET</td>
+                        <td>PROD_CORE</td>
+                        <td><span class="status-pill offline">BLOCK</span></td>
+                        <td><i class="ph ph-eye" style="cursor: pointer;"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('nav-security').classList.add('active');
+    document.getElementById('nav-dashboard').classList.remove('active');
+</script>
+{% endblock %}

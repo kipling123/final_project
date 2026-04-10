@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}SDN Analytics - Insights & Trends{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <!-- Header Summary -->
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span><i class="ph ph-chart-pie"></i> NETWORK ANALYTICS OVERVIEW</span>
+            <span style="font-size: 0.75rem; color: var(--online);">GENERATING REPORT <i class="ph ph-spinner ph-spin"></i></span>
+        </div>
+        <div class="panel-content" style="display: flex; justify-content: space-around; padding: 30px;">
+            <div style="text-align: center;">
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700;">TOTAL DATA PROCESSED</div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: white;">2.4 <span style="font-size: 1rem; color: var(--accent);">TB</span></div>
+            </div>
+            <div style="text-align: center; border-left: 1px solid var(--border-color); padding-left: 50px;">
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700;">UPEAK THROUGHPUT</div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: white;">842 <span style="font-size: 1rem; color: var(--accent);">Mbps</span></div>
+            </div>
+            <div style="text-align: center; border-left: 1px solid var(--border-color); padding-left: 50px;">
+                <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 700;">AVG LATENCY</div>
+                <div style="font-size: 2.2rem; font-weight: 800; color: white;">12 <span style="font-size: 1rem; color: var(--accent);">ms</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage Trends -->
+    <div class="panel" style="grid-column: span 8; height: 400px;">
+        <div class="panel-header">
+            <span><i class="ph ph-trend-up"></i> BANDWIDTH UTILIZATION (24H)</span>
+        </div>
+        <div class="panel-content">
+            <canvas id="bandwidthTrendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Node Distribution -->
+    <div class="panel" style="grid-column: span 4; height: 400px;">
+        <div class="panel-header">
+            <span><i class="ph ph-intersect"></i> NODE TYPE DISTRIBUTION</span>
+        </div>
+        <div class="panel-content" style="display: flex; align-items: center; justify-content: center;">
+            <div style="width: 220px; height: 220px;">
+                <canvas id="nodeDistChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Talkers -->
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span><i class="ph ph-microphone-stage"></i> TOP NETWORK TALKERS</span>
+        </div>
+        <div class="panel-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>SOURCE NODE</th>
+                        <th>DESTINATION</th>
+                        <th>PROTOCOL</th>
+                        <th>TOTAL TRAFFIC</th>
+                        <th>PERCENTAGE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--accent);">Hadoop-Worker-01</td>
+                        <td>Storage-Cluster-Main</td>
+                        <td>SMB/TCP</td>
+                        <td>452.1 GB</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="flex: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px;">
+                                    <div style="width: 45%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+                                </div>
+                                <span>45%</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600; color: var(--accent);">Dev-Workspace-X</td>
+                        <td>GitHub-Proxy</td>
+                        <td>HTTPS</td>
+                        <td>128.4 GB</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="flex: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px;">
+                                    <div style="width: 12%; height: 100%; background: var(--accent-orange); border-radius: 2px;"></div>
+                                </div>
+                                <span>12%</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Bandwidth Trend Chart
+    const trendCtx = document.getElementById('bandwidthTrendChart').getContext('2d');
+    new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+            datasets: [{
+                label: 'Download',
+                borderColor: '#00f2ff',
+                backgroundColor: 'rgba(0, 242, 255, 0.1)',
+                data: [20, 45, 28, 80, 75, 40, 30],
+                fill: true,
+                tension: 0.4
+            }, {
+                label: 'Upload',
+                borderColor: '#ff9d2a',
+                backgroundColor: 'rgba(255, 157, 42, 0.1)',
+                data: [15, 20, 15, 40, 35, 20, 15],
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: '#94a3b8' } } },
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } }
+            }
+        }
+    });
+
+    // Node Distribution Donut
+    const distCtx = document.getElementById('nodeDistChart').getContext('2d');
+    new Chart(distCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Switches', 'Hosts', 'VMs'],
+            datasets: [{
+                data: [4, 12, 8],
+                backgroundColor: ['#00f2ff', '#ff9d2a', '#9d50bb'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 20 } }
+            },
+            cutout: '75%'
+        }
+    });
+
+    document.getElementById('nav-analytics').classList.add('active');
+    document.getElementById('nav-dashboard').classList.remove('active');
+</script>
+{% endblock %}

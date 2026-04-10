@@ -5,11 +5,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SDN Dash{% endblock %}</title>
-    <!-- Google Fonts: Inter & JetBrains Mono -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap"
+    <title>{% block title %}FINAL PROJECT{% endblock %}</title>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- External Libs -->
@@ -18,49 +19,52 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="dark-theme">
+<body>
     <div class="glass-container">
-        <!-- Sidebar: Grafana Narrow Monitored Style -->
+        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <h1>FINAL PROJECT<span></span></h1>
+                <h1>FINAL PROJECT</h1>
             </div>
             <nav>
-                <a href="{% url 'networks:dashboard' %}" class="nav-item active">
-                    <span class="label">Main Dashboard</span>
+                <a href="{% url 'networks:dashboard' %}" class="nav-item active" id="nav-dashboard">
+                    <i class="ph ph-squares-four"></i>
+                    <span class="label" style="text-transform: uppercase; letter-spacing: 0.5px;">Dashboard</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <span class="label">Network Topology</span>
+                <a href="{% url 'networks:topology' %}" class="nav-item" id="nav-topology">
+                    <i class="ph ph-share-network"></i>
+                    <span class="label" style="text-transform: uppercase; letter-spacing: 0.5px;">Topology Map</span>
                 </a>
-                <a href="#" class="nav-item">
-                    <span class="label">Explore Data</span>
+                <a href="{% url 'networks:analytics' %}" class="nav-item" id="nav-analytics">
+                    <i class="ph ph-chart-line-up"></i>
+                    <span class="label" style="text-transform: uppercase; letter-spacing: 0.5px;">Analytics</span>
                 </a>
-                <div style="flex: 1;"></div> <!-- Spacer -->
-
+                <a href="{% url 'networks:security' %}" class="nav-item" id="nav-security">
+                    <i class="ph ph-shield-check"></i>
+                    <span class="label" style="text-transform: uppercase; letter-spacing: 0.5px;">Security Ops</span>
+                </a>
+                <div style="flex: 1;"></div>
+                <a href="{% url 'networks:settings' %}" class="nav-item" id="nav-settings">
+                    <i class="ph ph-gear"></i>
+                    <span class="label" style="text-transform: uppercase; letter-spacing: 0.5px;">Settings</span>
+                </a>
             </nav>
         </aside>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="content">
             <header class="top-bar">
                 <div class="breadcrumb">
-                    <span>Admin Profile</span>
+                    <i class="ph ph-house-line"></i>
                     <span>/</span>
-                    <span>Systems Monitoring</span>
+                    <span>Monitoring</span>
                     <span>/</span>
-                    <span class="current">SDN Cluster Status</span>
+                    <span class="current">FINAL PROJECT DASHBOARD</span>
                 </div>
                 <div class="top-actions">
-                    <div class="refresh-indicator" style="font-size: 0.75rem; color: var(--online);">
-                        <span class="pulse"></span> Live Updates
-                    </div>
-                    <div class="time-picker">
-                        <span>Last 15 minutes</span>
-                    </div>
-                    <div class="user-profile">
-                        <div class="avatar"
-                            style="width: 28px; height: 28px; background: #333; border-radius: 50%; border: 1px solid var(--border-color);">
-                        </div>
+                    <div class="refresh-indicator">
+                        <span class="pulse"></span>
+                        <span style="color: var(--online); font-weight: 600;">LIVE</span>
                     </div>
                 </div>
             </header>

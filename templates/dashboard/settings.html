@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Settings - Platform Configuration{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="panel" style="grid-column: span 12;">
+        <div class="panel-header">
+            <span><i class="ph ph-gear"></i> GLOBAL SYSTEM SETTINGS</span>
+        </div>
+        <div class="panel-content" style="padding: 40px;">
+            <form style="max-width: 600px; display: flex; flex-direction: column; gap: 30px;">
+                <!-- SDN Controller Config -->
+                <div class="form-group">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">SDN CONTROLLER ENDPOINT (RYU)</label>
+                    <div style="display: flex; gap: 12px;">
+                        <input type="text" value="http://localhost:8080" style="flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 10px; padding: 12px; color: white; font-family: 'JetBrains Mono';">
+                        <button type="button" class="action-btn primary" style="flex: 0; padding: 0 20px;">TEST</button>
+                    </div>
+                </div>
+
+                <!-- Grafana Config -->
+                <div class="form-group">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">GRAFANA DASHBOARD URL</label>
+                    <input type="text" value="http://localhost:3000" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 10px; padding: 12px; color: white;">
+                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 8px;">Used for proxying metrics data to the main dashboard charts.</p>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px;">API AUTHENTICATION TOKEN</label>
+                    <input type="password" value="********************************" style="width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 10px; padding: 12px; color: var(--accent);">
+                </div>
+
+                <!-- Feature Toggles -->
+                <div class="form-group">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 20px;">SYSTEM FEATURES</label>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Enable Real-time Topology Sync</span>
+                            <div style="width: 44px; height: 22px; background: var(--online); border-radius: 20px; position: relative; cursor: pointer;">
+                                <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;"></div>
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span>Auto-Isolate Suspicious Nodes</span>
+                            <div style="width: 44px; height: 22px; background: rgba(255,255,255,0.1); border-radius: 20px; position: relative; cursor: pointer;">
+                                <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; left: 2px; top: 2px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="action-btn primary" style="padding: 14px 40px;">SAVE CONFIGURATION</button>
+                    <button type="reset" class="action-btn" style="padding: 14px 40px;">DISCARD</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.getElementById('nav-settings').classList.add('active');
+    document.getElementById('nav-dashboard').classList.remove('active');
+</script>
+{% endblock %}

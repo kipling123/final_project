@@ -5,24 +5,33 @@ class Command(BaseCommand):
     help = 'Seeder for initial SDN topology'
 
     def handle(self, *args, **options):
-        # Create Nodes
-        s1, _ = Node.objects.get_or_create(name='Spine Switch 1', node_type='switch')
-        s2, _ = Node.objects.get_or_create(name='Spine Switch 2', node_type='switch')
-        l1, _ = Node.objects.get_or_create(name='Leaf Switch 1', node_type='switch')
-        l2, _ = Node.objects.get_or_create(name='Leaf Switch 2', node_type='switch')
+        # Clear existing to avoid duplicates if re-running
+        Link.objects.all().delete()
+        Node.objects.all().delete()
+
+        # Create Switches
+        s1 = Node.objects.create(name='S1', node_type='switch')
+        s2 = Node.objects.create(name='S2', node_type='switch')
+        l1 = Node.objects.create(name='L1', node_type='switch')
+        l2 = Node.objects.create(name='L2', node_type='switch')
         
-        h1, _ = Node.objects.get_or_create(name='Hadoop Master', node_type='host', ip_address='10.0.0.1')
-        h2, _ = Node.objects.get_or_create(name='Hadoop Worker 1', node_type='host', ip_address='10.0.0.2')
-        h3, _ = Node.objects.get_or_create(name='Hadoop Worker 2', node_type='host', ip_address='10.0.0.3')
+        # Create Hosts
+        master = Node.objects.create(name='MASTER', node_type='host', ip_address='10.0.0.100')
+        worker1 = Node.objects.create(name='Worker 1', node_type='host', ip_address='10.0.0.1')
+        worker2 = Node.objects.create(name='Worker 2', node_type='host', ip_address='10.0.0.2')
 
         # Create Links
-        Link.objects.get_or_create(source=s1, target=l1)
-        Link.objects.get_or_create(source=s1, target=l2)
-        Link.objects.get_or_create(source=s2, target=l1)
-        Link.objects.get_or_create(source=s2, target=l2)
+        # Spine -> Leaf Mesh
+        Link.objects.create(source=s1, target=l1, bandwidth=100.0)
+        Link.objects.create(source=s1, target=l2, bandwidth=100.0)
+        Link.objects.create(source=s2, target=l1, bandwidth=100.0)
+        Link.objects.create(source=s2, target=l2, bandwidth=100.0)
         
-        Link.objects.get_or_create(source=l1, target=h1)
-        Link.objects.get_or_create(source=l2, target=h2)
-        Link.objects.get_or_create(source=l2, target=h3)
+        # Leaf -> Host Connections
+        Link.objects.create(source=master, target=l1, bandwidth=10.0)
+        Link.objects.create(source=worker1, target=l1, bandwidth=10.0)
+        Link.objects.create(source=worker2, target=l2, bandwidth=10.0)
 
-        self.stdout.write(self.style.SUCCESS('Successfully seeded SDN topology'))
+        self.stdout.write(self.style.SUCCESS('Successfully updated topology to match newest requirements'))
+
+
