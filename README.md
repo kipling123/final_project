@@ -1,4 +1,4 @@
-# Final Project 
+# Final Project Kelompok 2 - Adaptive Network Laboratory 
 # Deskripsi
   Tugas ini merupakan implementasi jaringan berbasis Software Defined Networking menggunakan dua VM: satu sebagai controller dengan Ryu Controller, serta VM berikutnya untuk simulasi jaringan menggunakan Containernet, Open vSwitch, dan Docker Engine. Fokus utama adalah membangun topologi, memastikan seluruh node terhubung dalam satu cluster, serta menyediakan dashboard monitoring jaringan.
 
