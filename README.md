@@ -19,6 +19,7 @@ VM1 :
  
 
 VM2 : 
+
 ○ OS : Ubuntu Server 22.04 
 
 ○ Containernet 
@@ -29,8 +30,11 @@ VM2 :
 
 # Penjelasan Topologi
   Topology pada gambar ini menggambarkan arsitektur Software Defined Networking (SDN) yang menerapkan Cluster Hadoop yang berjalan di dalam container Docker. Topologi ini terdiri dari dua Virtual Machine (VM) di mana pada VM1 menjadi Management Node atau pada struktur SDN berperan sebagai Control Plane dan VM2 menjadi Infrastruktur Node atau Data Plane. Kedua VM tersebut bekerja sama untuk mengelola jaringan dan menjalankan proses data menggunakan Hadoop.
+ 
   Pada VM1 ini bersifat sebagai pusat pengendali jaringan yang didalamnya terdapat SDN Controller yang nantinya controller ini akan mengatur lalu lintas data mengalir di jaringan. Selanjutnya ada OpenFlow, di mana OpenFlow ini berfungsi untuk komunikasi antara controller dan perangkat jaringan melalui protokol OpenFlow (menentukan jalur paket data). 
+  
   Pada VM2 itu punya komponen Jaringan Spine Leaf dengan menggunakan OVS (Open vSwitch) di mana spine ini sebagai inti jaringan yang menghubungkan leaf switch dan leaf switch itu menghubung ke container. Setiap leaf switch terhubung ke semua spine switch, menciptakan banyak jalur yang efisien. 
+ 
   Cluster Hadoop yang berjalan pada container terdiri dari : 
 Hadoop Master : mengelola data dan struktur penyimpanan HDFS
 Hadoop Worker 1 : menyimpan dan memproses data (DataNode)
