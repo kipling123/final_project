@@ -36,6 +36,11 @@ VM2 :
   Pada VM2 itu punya komponen Jaringan Spine Leaf dengan menggunakan OVS (Open vSwitch) di mana spine ini sebagai inti jaringan yang menghubungkan leaf switch dan leaf switch itu menghubung ke container. Setiap leaf switch terhubung ke semua spine switch, menciptakan banyak jalur yang efisien. 
  
   Cluster Hadoop yang berjalan pada container terdiri dari : 
+
 Hadoop Master : mengelola data dan struktur penyimpanan HDFS
+
 Hadoop Worker 1 : menyimpan dan memproses data (DataNode)
+
 Hadoop Worker 2 : menyimpan dan memproses data tambahan (DataNode)
+
+ 
